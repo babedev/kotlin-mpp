@@ -1,0 +1,4 @@
+#Fri Sep 20 00:35:16 ICT 2019
+base.0=/Users/babedev/Development/github/babedev/kotlin-android-ios/app/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

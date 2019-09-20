@@ -1,0 +1,142 @@
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform' version '1.3.50'
+//    id 'org.jetbrains.kotlin.plugin.serialization' version '1.3.50'
+}
+repositories {
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    google()
+    jcenter()
+    mavenCentral()
+}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlinx-serialization'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId 'com.github.babedev.mpp'
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName '1.0'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+//    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0"
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+}
+
+kotlin {
+    js()
+    android("android")
+    // This is for iPhone emulator
+    // Switch here to iosArm64 (or iosArm32) to build library for iPhone device
+    iosX64("ios") {
+        binaries {
+            framework()
+        }
+    }
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation kotlin('stdlib-common')
+//                implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0'
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation kotlin('stdlib-js')
+            }
+
+            compileKotlinJs {
+                kotlinOptions.metaInfo = true
+                kotlinOptions.sourceMap = true
+                kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
+                kotlinOptions.main = "call"
+                kotlinOptions.moduleKind = "umd"
+            }
+        }
+        jsTest {
+
+        }
+        androidMain {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        androidTest {
+            dependencies {
+                implementation kotlin('test')
+                implementation kotlin('test-junit')
+            }
+        }
+        iosMain {
+        }
+        iosTest {
+        }
+    }
+}
+
+dependencies {
+//    commonMainImplementation "io.ktor:ktor-client-core:1.2.4"
+//    commonMainImplementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0'
+
+//    androidMainImplementation "io.ktor:ktor-client-android:1.2.4"
+//    androidMainImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.1'
+
+//    iosMainImplementation "io.ktor:ktor-client-ios:1.2.4"
+//    iosMainImplementation "io.ktor:ktor-client-ios-iosx64:1.2.4"
+//    iosMainImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.3.1'
+//    iosMainImplementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.13.0"
+
+//    jsMainImplementation "io.ktor:ktor-client-js:1.2.4"
+//    jsMainImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.3.1'
+//    jsMainImplementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.13.0"
+}
+
+// This task attaches native framework built from ios module to Xcode project
+// (see iosApp directory). Don't run this task directly,
+// Xcode runs this task itself during its build process.
+// Before opening the project from iosApp directory in Xcode,
+// make sure all Gradle infrastructure exists (gradle.wrapper, gradlew).
+task copyFramework {
+    def buildType = project.findProperty('kotlin.build.type') ?: 'DEBUG'
+    def target = project.findProperty('kotlin.target') ?: 'ios'
+    dependsOn kotlin.targets."$target".binaries.getFramework(buildType).linkTask
+
+    doLast {
+        def srcFile = kotlin.targets."$target".binaries.getFramework(buildType).outputFile
+        def targetDir = getProperty('configuration.build.dir')
+        copy {
+            from srcFile.parent
+            into targetDir
+            include 'app.framework/**'
+            include 'app.framework.dSYM'
+        }
+    }
+}
