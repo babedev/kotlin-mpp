@@ -1,5 +1,5 @@
 rootProject.name = 'kotlin-android-ios'
 
-include ':app'
+include ':app', ':web'
 
 enableFeaturePreview('GRADLE_METADATA')

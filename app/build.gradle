@@ -78,7 +78,7 @@ kotlin {
                 kotlinOptions.sourceMap = true
                 kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
                 kotlinOptions.main = "call"
-                kotlinOptions.moduleKind = "umd"
+                kotlinOptions.moduleKind = "amd"
             }
         }
         jsTest {

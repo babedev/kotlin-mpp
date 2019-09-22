@@ -72,8 +72,13 @@ fabric.properties
 # Sonarlint plugin
 .idea/sonarlint
 
-.DS_Store/
+.DS_Store
 
 .gradle/
+build/
+app/build/
 
 local.properties
+
+web/public/
+web/build/

@@ -1,11 +1,11 @@
 package com.github.babedev.data
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.url
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+//import io.ktor.client.HttpClient
+//import io.ktor.client.request.get
+//import io.ktor.client.request.url
+//import kotlinx.coroutines.CoroutineDispatcher
+//import kotlinx.coroutines.GlobalScope
+//import kotlinx.coroutines.launch
 
 //internal expect val applicationDispatcher: CoroutineDispatcher
 
